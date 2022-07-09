@@ -1,4 +1,4 @@
-export type currentWeatherType = {
+export type CurrentWeatherType = {
     lat: number;
     lon: number;
     location: string;
@@ -9,44 +9,50 @@ export type currentWeatherType = {
     windSpeed: number;
     visibility: number;
     pressure: number;
-}
+};
 
-export type ForecastHourly = {
+export type ForecastHourlyObj = {
     weather: { icon: string }[]
     dt: number;
     temp: number;
-}
+};
 
-export type ForecastNextDay = {
-    day: string;
-    temp: number;
-    description: string;
+export type ForecastDaily = {
+    dt: number;
+    weather: { description: string }[];
+    temp: { day: number };
     humidity: number;
-    windSpeed: number;
-}
+    wind_speed: number;
+};
 
-export type Forecast = {
+export type ForecastHourly = {
     timezone: string;
-    hourly: ForecastHourly[]
-}
+    hourly: ForecastHourlyObj[]
+};
 
-export type fetchForeCastOptions = {
-    lat: number,
-    lon: number,
+export type fetchForecastHourlyOptions = {
+    lat: number;
+    lon: number;
     isCelsius: boolean
-}
+};
+
+export type FetchDailyOptions = {
+    lat: number;
+    lon: number;
+};
 
 export type fetchWeatherOptions = {
     city: string;
     isCelsius: boolean;
     zone: string;
-}
+};
 
 export default interface weatherSliceState {
-    currentWeather: currentWeatherType;
-    forecast: Forecast;
-    ForecastNextDay: ForecastNextDay
+    currentWeather: CurrentWeatherType;
+    forecastHourly: ForecastHourly;
+    forecastDaily: ForecastDaily[];
     status: 'loading' | 'fulfilled' | 'rejected';
     forecastStatus: 'loading' | 'fulfilled' | 'rejected';
+    forecastDailyStatus: 'loading' | 'fulfilled' | 'rejected';
     isCelsius: boolean;
 }

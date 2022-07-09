@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { DateTime } from "luxon";
 import { RootState } from "../../store";
-import weatherSliceState, { currentWeatherType, fetchForeCastOptions, fetchWeatherOptions, Forecast } from "./types";
+import weatherSliceState, { CurrentWeatherType, FetchDailyOptions, fetchForecastHourlyOptions, fetchWeatherOptions, ForecastDaily, ForecastHourly } from "./types";
 
 export const fetchWeather = createAsyncThunk(
     'weather/fetchweahterStatus',
@@ -10,7 +10,6 @@ export const fetchWeather = createAsyncThunk(
         const { city, isCelsius, zone } = options
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${city ? city : 'London'}&appid=c4896daa6305d6a7957041f7de285a7a&units=${isCelsius ? 'metric' : 'imperial'}`
         const { data } = await axios.get(url)
-        // const date = new Date((data.sys.sunrise + data.timezone) * 1000).toLocaleString('en', { weekday: 'long', hour: '2-digit', minute: '2-digit' })
         const date = DateTime.now().setZone(`${zone}`).toFormat('cccc h:mm a')
         return {
             lon: data.coord.lon,
@@ -19,7 +18,7 @@ export const fetchWeather = createAsyncThunk(
             date: date,
             temp: Math.round(data.main.temp),
             description: data.weather[0].description,
-            windSpeed: data.wind.speed,
+            windSpeed: Math.round(data.wind.speed),
             humidity: data.main.humidity,
             visibility: 10000,
             pressure: data.main.pressure,
@@ -27,24 +26,26 @@ export const fetchWeather = createAsyncThunk(
     }
 )
 
-export const fetchForecast = createAsyncThunk(
-    'weather/fetchForecastStatus',
-    async (options: fetchForeCastOptions) => {
+export const fetchForecastHourly = createAsyncThunk(
+    'weather/fetchForecastHourlyStatus',
+    async (options: fetchForecastHourlyOptions) => {
         const { lat, lon, isCelsius } = options
         const url = `https://api.openweathermap.org/data/2.5/onecall?lon=${lon}&lat=${lat}&lat=37&appid=c4896daa6305d6a7957041f7de285a7a&units=${isCelsius ? 'metric' : 'imperial'}`
         const { data } = await axios.get(url);
-        console.log(DateTime.fromSeconds(1657468800).setZone(data.timezone).toFormat('cccc'))
-        return data
+        return {
+            timezone: data.timezone,
+            hourly: data.hourly.slice(1, 5)
+        }
     }
 )
 
-export const fetchNextDay = createAsyncThunk(
-    'weather/fethNextDayStatus',
-    async () => {
-        const { data } = await axios.get('https://api.openweathermap.org/data/2.5/forecast?q=London&appid=c4896daa6305d6a7957041f7de285a7a&units=metric')
-        return {
-            data
-        }
+export const fetchDaily = createAsyncThunk(
+    'weather/fethDailyStatus',
+    async (options: FetchDailyOptions) => {
+        const { lat, lon } = options
+        const url = `https://api.openweathermap.org/data/2.5/onecall?lon=${lon}&lat=${lat}&exclude=minutely,hourly&appid=c4896daa6305d6a7957041f7de285a7a&units=metric`
+        const { data } = await axios.get(url)
+        return data.daily.slice(1, 6)
     }
 )
 
@@ -61,16 +62,11 @@ const initialState: weatherSliceState = {
         visibility: 10000,
         pressure: 1031,
     },
-    forecast: { timezone: 'America/London', hourly: [] },
-    ForecastNextDay: {
-        day: 'wednesday',
-        temp: 19,
-        description: 'clear sky',
-        windSpeed: 5,
-        humidity: 57
-    },
+    forecastHourly: { timezone: 'America/London', hourly: [] },
+    forecastDaily: [],
     status: 'loading',
     forecastStatus: 'loading',
+    forecastDailyStatus: 'loading',
     isCelsius: true
 }
 
@@ -83,7 +79,7 @@ const weatherSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchWeather.fulfilled, (state, action: PayloadAction<currentWeatherType>) => {
+        builder.addCase(fetchWeather.fulfilled, (state, action: PayloadAction<CurrentWeatherType>) => {
             state.currentWeather = action.payload
             state.status = 'fulfilled'
         })
@@ -93,12 +89,16 @@ const weatherSlice = createSlice({
         builder.addCase(fetchWeather.rejected, (state) => {
             state.status = 'rejected'
         })
-        builder.addCase(fetchForecast.fulfilled, (state, action: PayloadAction<Forecast>) => {
-            state.forecast = action.payload
+        builder.addCase(fetchForecastHourly.fulfilled, (state, action: PayloadAction<ForecastHourly>) => {
+            state.forecastHourly = action.payload
             state.forecastStatus = 'fulfilled'
         })
-        builder.addCase(fetchForecast.pending, (state) => {
+        builder.addCase(fetchForecastHourly.pending, (state) => {
             state.forecastStatus = 'loading'
+        })
+        builder.addCase(fetchDaily.fulfilled, (state, action: PayloadAction<ForecastDaily[]>) => {
+            state.forecastDaily = action.payload
+            state.forecastDailyStatus = 'fulfilled'
         })
     }
 });

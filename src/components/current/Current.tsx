@@ -6,7 +6,6 @@ import { fetchWeather, selectWeather } from '../../redux/slices/weather/slice';
 import { useAppDispatch } from '../../redux/store';
 import { ThreeDots } from 'react-loader-spinner';
 import SkeletonCurrentDate from './SkeletonCurrentDate';
-import TableCurrentData from './TableCurrentData';
 
 const Container = styled.div`
     display: flex;
@@ -31,7 +30,7 @@ const CurrentTemp = styled.h1`
 
 
 const Current: React.FC = () => {
-    const { status, currentWeather, forecast } = useSelector(selectWeather);
+    const { status, currentWeather, forecastHourly } = useSelector(selectWeather);
     const { searchValue } = useSelector(selectSearch);
     const { isCelsius } = useSelector(selectWeather)
     const dispatch = useAppDispatch();
@@ -40,9 +39,9 @@ const Current: React.FC = () => {
         dispatch(fetchWeather({
             city: searchValue,
             isCelsius,
-            zone: forecast.timezone
+            zone: forecastHourly.timezone
         }))
-    }, [searchValue, isCelsius, forecast.timezone]);
+    }, [searchValue, isCelsius, forecastHourly.timezone]);
 
     return (
         <Container>

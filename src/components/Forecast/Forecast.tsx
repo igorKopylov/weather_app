@@ -1,5 +1,6 @@
+import axios from 'axios';
 import { DateTime } from 'luxon';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { selectWeather } from '../../redux/slices/weather/slice';
@@ -41,7 +42,7 @@ const Sup = styled.sup`
 `
 
 type ForecastProps = {
-    time: number;
+    time: string;
     iconUrl: string;
     temp: number;
     halfDay: string;

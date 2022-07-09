@@ -74,8 +74,10 @@ const Search: React.FC = () => {
     };
 
     const onClickSearch = () => {
-        dispatch(setSearchValue(inputValue))
-        dispatch(setInputValue(''))
+        if (inputValue) {
+            dispatch(setSearchValue(inputValue))
+            dispatch(setInputValue(''))
+        }
     }
 
     const onClickClear = () => {
