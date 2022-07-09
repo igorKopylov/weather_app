@@ -1,16 +1,14 @@
-import React, { useEffect } from 'react';
+import { DateTime } from 'luxon';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { selectSearch } from '../../redux/slices/search/slice';
-import { fetchForecast, selectWeather } from '../../redux/slices/weather/slice';
-import { useAppDispatch } from '../../redux/store';
-import Skeleton from './Skeleton'
+import { selectWeather } from '../../redux/slices/weather/slice';
 
-const Container = styled.div`
+const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    width: 110px;
     
     &:not(:last-child) {
         margin-right: 160px;
@@ -22,38 +20,41 @@ const Time = styled.p`
     color: rgba(52, 58, 64, 0.8);
 `;
 
-const Icon = styled.img`
+const Icon = styled('img') <{ iconUrl: string }>`
     margin-top: 15px;
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background-color: #91b1fa;
+    background-color: ${props => props.iconUrl.includes('n@2x.png') ? '#031551' : '#91b1fa'};
 `;
 
-const Temp = styled.p`
+const Temp = styled.p` 
     font-size: 32px;
     margin-top: 26px;
     color: #343A40;
 `;
 
+const Sup = styled.sup`
+    opacity: 0.8;
+    font-size: 20px;
+    margin-left: 4px;
+`
+
 type ForecastProps = {
-    date: string;
+    time: number;
     iconUrl: string;
     temp: number;
-}
+    halfDay: string;
+};
 
-const Forecast: React.FC<ForecastProps> = ({ date, iconUrl, temp }) => {
-    const { searchValue } = useSelector(selectSearch)
-    const { currentWeather, forecast, isCelsius } = useSelector(selectWeather)
-    const dispatch = useAppDispatch()
-
+const Forecast: React.FC<ForecastProps> = ({ time, iconUrl, temp, halfDay }) => {
+    const { isCelsius } = useSelector(selectWeather)
     return (
-        <Container>
-            <Time>{date}</Time>
-            <Icon src={iconUrl} alt='icon' />
+        <Wrapper>
+            <Time>{time}:00<Sup>{halfDay}</Sup></Time>
+            <Icon iconUrl={iconUrl} src={iconUrl} alt='icon' />
             <Temp>{temp} °{isCelsius ? 'C' : 'F'}</Temp>
-            <Skeleton />
-        </Container>
+        </Wrapper>
     )
 };
 

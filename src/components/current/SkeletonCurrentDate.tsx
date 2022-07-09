@@ -1,12 +1,12 @@
 import React from "react"
 import ContentLoader from "react-content-loader"
 
-const MyLoader = () => (
+const SkeletonCurrentDate = () => (
     <ContentLoader
         speed={2}
-        width={100}
-        height={218}
-        viewBox="0 0 100 219"
+        width={210}
+        height={21}
+        viewBox="0 0 210 21"
         backgroundColor="#e0e0e0"
         foregroundColor="#ecebeb"
     >
@@ -17,10 +17,8 @@ const MyLoader = () => (
         <rect x="78" y="22" rx="0" ry="0" width="1" height="1" />
         <rect x="204" y="456" rx="0" ry="0" width="1" height="1" />
         <rect x="179" y="79" rx="0" ry="0" width="0" height="17" />
-        <rect x="3" y="0" rx="7" ry="7" width="95" height="35" />
-        <circle cx="50" cy="104" r="50" />
-        <rect x="13" y="177" rx="7" ry="7" width="77" height="38" />
+        <rect x="0" y="0" rx="5" ry="5" width="210" height="21" />
     </ContentLoader>
 )
 
-export default MyLoader
+export default SkeletonCurrentDate

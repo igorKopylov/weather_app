@@ -4,13 +4,30 @@ export type currentWeatherType = {
     location: string;
     date: string;
     temp: number;
+    description: string;
+    humidity: number;
+    windSpeed: number;
+    visibility: number;
+    pressure: number;
+}
+
+export type ForecastHourly = {
+    weather: { icon: string }[]
+    dt: number;
+    temp: number;
+}
+
+export type ForecastNextDay = {
+    day: string;
+    temp: number;
+    description: string;
+    humidity: number;
+    windSpeed: number;
 }
 
 export type Forecast = {
-    weather: { icon: string }[]
-    dt: number;
-    iconUrl: string;
-    temp: number;
+    timezone: string;
+    hourly: ForecastHourly[]
 }
 
 export type fetchForeCastOptions = {
@@ -21,12 +38,15 @@ export type fetchForeCastOptions = {
 
 export type fetchWeatherOptions = {
     city: string;
-    isCelsius: boolean
+    isCelsius: boolean;
+    zone: string;
 }
 
 export default interface weatherSliceState {
     currentWeather: currentWeatherType;
-    forecast: Forecast[]
+    forecast: Forecast;
+    ForecastNextDay: ForecastNextDay
     status: 'loading' | 'fulfilled' | 'rejected';
+    forecastStatus: 'loading' | 'fulfilled' | 'rejected';
     isCelsius: boolean;
 }
