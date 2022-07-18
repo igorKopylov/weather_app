@@ -1,23 +1,55 @@
 import React, { useEffect } from 'react';
-import Header from '../components/Header';
 import styled from 'styled-components'
-import Forecast from '../components/forecast/Forecast';
+
+import Forecast from '../components/Forecast';
+import TableDailyData from '../components/TableDailyData';
+
+import Current from '../components/Current';
+import TableCurrentData from '../components/TableCurrentData';
+import TableCurrentDataSkeleton from '../components/TableCurrentData/Skeleton';
+
+import LocationError from '../components/Errors/LocationError';
+import NetworkError from '../components/Errors/NetworkError';
+
 import { useAppDispatch } from '../redux/store';
-import { fetchDaily, fetchForecastHourly, selectWeather } from '../redux/slices/weather/slice';
 import { useSelector } from 'react-redux';
-import { selectSearch, setInputValue, setSearchValue } from '../redux/slices/search/slice';
-import Current from '../components/current/Current';
-import Skeleton from '../components/forecast/Skeleton';
-import TableCurrentData from '../components/current/TableCurrentData';
-import TableDailyData from '../components/forecast/TableDailyData';
+import { fetchDaily, fetchForecastHourly, fetchWeather, selectWeather } from '../redux/slices/weather/slice';
+import { selectSearch } from '../redux/slices/search/slice';
+
+import ForecastSkeleton from '../components/Forecast/Skeleton';
+import CurrentSkeleton from '../components/Current/Skeleton'
 import { DateTime } from 'luxon';
+import { ThreeDots } from 'react-loader-spinner';
+import { ForecastHourlyObj } from '../redux/slices/weather/types';
 
 const ContentTop = styled.div`
     display: flex;
     margin-bottom: 116px;
+
+    @media (max-width: 1205px) {
+        flex-direction: column;
+        width: 800px;
+        margin: 0 auto;
+        margin-bottom: 116px;
+        width: 1100px;
+    }
 `;
 
-const ForecastSkeleton = styled.div`
+const ContentTopForecast = styled.div`
+    display: flex;
+    align-items: center;    
+    margin: 0 auto;
+    
+    &:not(:last-child) {
+        margin-right: 160px;
+    }; 
+
+    /* @media (max-width: 1205px) {
+        overflow: auto;
+    } */
+`
+
+const ForecastSkeletonStyle = styled.div`
     &:not(:last-child) {
         margin-right: 160px;
     }
@@ -28,21 +60,51 @@ const ContentFiveDays = styled.div`
     border: 2px solid #000;
     border-radius: 50px;
     margin: 100px auto;
-`
+`;
+
+const TableSkeletonWrapper = styled.div`
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 178px;
+    background-color: #343A40;
+
+    div {
+        width: 120px;
+        height: 110px;
+        margin-top: 25px;
+
+        &:not(:last-child) {
+            margin-right: 176px; 
+        }
+        &:first-child {
+            margin-left: 125px
+        }
+    }
+`;
+
+const Time = styled.h1`
+    position: absolute;
+    color: #fff;
+    top: 22px;
+    left: 25px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 2px;
+`;
 
 const Home: React.FC = () => {
-    const { currentWeather, forecastHourly, forecastDaily, isCelsius, forecastStatus } = useSelector(selectWeather);
+    const { currentWeather, forecastHourly, forecastDaily, isCelsius, errorMessage, status } = useSelector(selectWeather);
     const dispatch = useAppDispatch();
-    const { inputValue, searchValue } = useSelector(selectSearch);
+    const { searchValue } = useSelector(selectSearch);
 
-    const onPressEnter = (event: React.KeyboardEvent<HTMLDivElement>) => {
-        if (inputValue) {
-            if (event.key === 'Enter') {
-                dispatch(setSearchValue(inputValue))
-                dispatch(setInputValue(''))
-            }
-        }
-    };
+    useEffect(() => {
+        dispatch(fetchWeather({
+            city: searchValue,
+            isCelsius,
+            zone: forecastHourly.timezone
+        }))
+    }, [searchValue, isCelsius, forecastHourly.timezone]);
 
     useEffect(() => {
         dispatch(fetchForecastHourly({
@@ -50,49 +112,95 @@ const Home: React.FC = () => {
             lat: currentWeather.lat,
             isCelsius
         }))
-    }, [searchValue, currentWeather, isCelsius]);
+    }, [searchValue, isCelsius, currentWeather.lat, currentWeather.lon]);
 
     useEffect(() => {
         dispatch(fetchDaily({
             lon: currentWeather.lon,
-            lat: currentWeather.lat
+            lat: currentWeather.lat,
+            isCelsius
         }))
-    }, [currentWeather.lat, currentWeather.lon]);
+    }, [isCelsius, currentWeather.lat, currentWeather.lon]);
 
     return (
-        <div onKeyPress={event => onPressEnter(event)}>
-            <Header />
-            <ContentTop>
-                <Current />
-                {
-                    forecastStatus === 'fulfilled' && forecastHourly.hourly.map((obj: any, i: number) => {
-                        const time = DateTime.fromSeconds(obj.dt).setZone(forecastHourly.timezone).toFormat('h')
-                        const halfDay = DateTime.fromSeconds(obj.dt).setZone(forecastHourly.timezone).toFormat('a')
-                        const formattedHalfDay = halfDay.includes('PM') ? 'pm' : 'am'
-                        const iconUrl = `https://openweathermap.org/img/wn/${obj.weather[0].icon}@2x.png`
-                        return <Forecast key={i} time={time} halfDay={formattedHalfDay} iconUrl={iconUrl} temp={Math.round(obj.temp)} />
-                    })
-                }
-                {
-                    forecastStatus === 'loading' && [...new Array(4)].map((_, i) => <ForecastSkeleton key={i}><Skeleton /></ForecastSkeleton>)
-                }
-            </ContentTop>
-            <TableCurrentData />
-            <ContentFiveDays>
-                {
-                    forecastDaily.map((obj, i) => {
-                        const day = DateTime.fromSeconds(obj.dt).setZone(forecastHourly.timezone).toFormat('cccc')
-                        return <TableDailyData
-                            key={i}
-                            day={day}
-                            description={obj.weather[0].description}
-                            humidity={obj.humidity}
-                            windSpeed={Math.round(obj.wind_speed)}
-                            temp={Math.round(obj.temp.day)}
-                        />
-                    })
-                }
-            </ContentFiveDays>
+        <div>
+            {
+                status === 'fulfilled' && (
+                    <>
+                        <ContentTop>
+                            <Current />
+                            <ContentTopForecast>
+                                {
+                                    forecastHourly.hourly.map((obj: ForecastHourlyObj, i: number) => {
+                                        const time = DateTime.fromSeconds(obj.dt).setZone(forecastHourly.timezone).toFormat('h')
+                                        const halfDay = DateTime.fromSeconds(obj.dt).setZone(forecastHourly.timezone).toFormat('a')
+                                        const formattedHalfDay = halfDay.includes('PM') ? 'pm' : 'am'
+                                        const iconUrl = `https://openweathermap.org/img/wn/${obj.weather[0].icon}@2x.png`
+                                        return <Forecast key={i} time={time} halfDay={formattedHalfDay} iconUrl={iconUrl} temp={Math.round(obj.temp)} />
+                                    })
+                                }
+                            </ContentTopForecast>
+
+                            {/* {
+                    status === 'loading' && [...new Array(4)].map((_, i) => <ForecastSkeletonStyle key={i}><ForecastSkeleton /></ForecastSkeletonStyle>)
+                } */}
+
+                        </ContentTop>
+                        <TableCurrentData />
+                        {
+                            <ContentFiveDays>
+                                {
+                                    forecastDaily.map((obj, i) => {
+                                        const day = DateTime.fromSeconds(obj.dt).setZone(forecastHourly.timezone).toFormat('cccc')
+                                        return (
+                                            <TableDailyData
+                                                key={i}
+                                                day={day}
+                                                description={obj.weather[0].description}
+                                                humidity={obj.humidity}
+                                                windSpeed={Math.round(obj.wind_speed)}
+                                                temp={Math.round(obj.temp.day)}
+                                            />
+                                        )
+                                    })
+                                }
+                            </ContentFiveDays>
+                        }
+                    </>
+                )
+            }
+            {
+                status === 'loading' && (
+                    <>
+                        <ContentTop>
+                            <CurrentSkeleton />
+                            <ContentTopForecast>
+                                {
+                                    [...new Array(4)].map((_, i) => <ForecastSkeletonStyle key={i}><ForecastSkeleton /></ForecastSkeletonStyle>)
+                                }
+                            </ContentTopForecast>
+
+                        </ContentTop>
+                        <TableSkeletonWrapper>
+                            <Time>Now</Time>
+                            {
+                                [...new Array(5)].map((_, i) => <div key={i}><TableCurrentDataSkeleton /></div>)
+                            }
+                        </TableSkeletonWrapper>
+                        <div style={{ display: 'flex', alignItems: 'end', width: '200px', margin: '90px auto' }}>
+                            <h1 style={{ margin: '0px 5px 9px 0px', fontSize: '50px' }}>Loading</h1>
+                            <ThreeDots width='60' height='50' color='grey' />
+                        </div>
+                    </>
+                )
+            }
+            {status === 'rejected' && (
+                <>
+                    {
+                        errorMessage === 'city not found' ? <LocationError /> : <NetworkError />
+                    }
+                </>
+            )}
         </div>
     )
 }

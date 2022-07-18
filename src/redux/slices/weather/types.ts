@@ -39,6 +39,7 @@ export type fetchForecastHourlyOptions = {
 export type FetchDailyOptions = {
     lat: number;
     lon: number;
+    isCelsius: boolean
 };
 
 export type fetchWeatherOptions = {
@@ -52,7 +53,6 @@ export default interface weatherSliceState {
     forecastHourly: ForecastHourly;
     forecastDaily: ForecastDaily[];
     status: 'loading' | 'fulfilled' | 'rejected';
-    forecastStatus: 'loading' | 'fulfilled' | 'rejected';
-    forecastDailyStatus: 'loading' | 'fulfilled' | 'rejected';
+    errorMessage: string | null;
     isCelsius: boolean;
 }

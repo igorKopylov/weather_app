@@ -1,48 +1,72 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import search from '../assets/Search.svg';
 import { selectSearch, setInputValue, setSearchValue } from '../redux/slices/search/slice';
 import { useAppDispatch } from '../redux/store';
-import debounce from 'lodash.debounce';
-import { selectWeather } from '../redux/slices/weather/slice';
 
 const Wrapper = styled.div`
     display: flex;
-    width: 603px;
+    width: calc(100vw - 933px);
     height: 40px;
     margin-top: 30px;
     margin-right: 216px;
-`;
 
-const InputWrapper = styled.div`
-    display: flex;
-    width: 530px;
-    height: 100%;
-    border-radius: 5px 0px 0px 5px;
-    background-color: #fff;
+    @media (max-width: 1240px) {
+        width: calc(100vw - 600px);
+        margin-right: 100px;
+    }
 `;
 
 const Svg = styled.svg`
     opacity: 0.7;
-    margin: 6px 10px 6px 5px;
+    margin: auto 0;
+    margin-left: 25px;
+    width: 40px;
     transition: .2s;
     cursor: pointer;
 
     &:hover {
         opacity: 0.5;
     }
-`
+
+    @media (max-width: 980px) {
+        display: none;
+        margin: 0;
+    }
+`;
+
+const InputWrapper = styled.div`
+    display: flex;
+    width: calc(100vw - 1006px);
+    height: 100%;
+    border-radius: 5px 0px 0px 5px;
+    background-color: #fff;
+
+    @media (max-width: 1240px) {
+        width: calc(100vw - 740px);
+    }
+`;
 
 const Input = styled.input`
-    width: 480px;
-    height: 30px;
-    color: #4e4e4e;
-    margin: 5px 20px;
-    font-size: 19px;
+        width: calc(100vw - 1106px);
+        height: 30px;
+        color: #4e4e4e;
+        margin: auto 0; 
+        margin-left: 20px;
+        font-size: 19px;
 
-    &::placeholder {
-        color: #6a6a6a;
+        &::placeholder {
+            color: #6a6a6a;
+        }
+
+        @media (max-width: 1240px) {
+            width: calc(100vw - 850px)
+        }
+
+        @media (max-width: 980px) {
+        display: none;
+        margin: 0;
     }
 `;
 
@@ -86,6 +110,19 @@ const Search: React.FC = () => {
             inputRef.current?.focus()
         }
     }
+
+    useEffect(() => {
+        const onPressEnter = (event: any) => {
+            if (event.key === 'Enter') {
+                dispatch(setSearchValue(inputValue))
+                dispatch(setInputValue(''))
+            }
+        }
+
+        document.body.addEventListener('keydown', onPressEnter)
+
+        return () => document.body.removeEventListener('keydown', onPressEnter)
+    }, [inputValue])
 
     return (
         <Wrapper>

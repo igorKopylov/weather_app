@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import Reacr from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import logo from '../assets/logo.svg';
@@ -11,12 +11,16 @@ const StyledHeader = styled.header`
     height: 100px;
     background-color: #343A40;
     margin-bottom: 112px;
+
+    @media (max-width: 1205px) {
+        margin-bottom: 50px;
+    }
 `;
 
 const Container = styled.div`
     display: flex;
     margin-left: 105px;
-    width: 1230px;
+    width: calc(100vw - 229px);
 `;
 
 const HeaderLeft = styled.div`

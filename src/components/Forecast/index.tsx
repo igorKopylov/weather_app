@@ -10,9 +10,19 @@ const Wrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    bottom: 0;
     
     &:not(:last-child) {
         margin-right: 160px;
+
+    @media (max-width: 1400px) {
+        margin-right: 120px;
+    }
+
+    @media (max-width: 1205px) {
+        margin-right: 200px;
+    }
     }
 `;
 

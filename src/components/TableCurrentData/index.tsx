@@ -24,7 +24,6 @@ const Table = styled.table`
     width: 1300px;
     margin: auto;
     padding-top: 54px;
-    border-radius: #000;
 `
 
 const Tr = styled.tr`

@@ -1,7 +1,9 @@
 import { NumberingSystem } from 'luxon';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import ArrowBack from '../../assets/ArrowBack.svg'
+import { selectWeather } from '../redux/slices/weather/slice';
 
 const Wrapper = styled.div`
     display: flex;
@@ -46,7 +48,7 @@ type TableDailyDataProps = {
 }
 
 const TableDailyData: React.FC<TableDailyDataProps> = ({ day, description, humidity, windSpeed, temp }) => {
-
+    const { isCelsius } = useSelector(selectWeather)
     return (
         <Wrapper>
             <Table>
@@ -65,7 +67,7 @@ const TableDailyData: React.FC<TableDailyDataProps> = ({ day, description, humid
                         <Td style={{ paddingRight: '125px' }}>{description}</Td>
                         <Td style={{ paddingRight: '120px' }}>{humidity}%</Td>
                         <Td style={{ paddingRight: '96px' }}>{windSpeed} mph</Td>
-                        <Td>{temp}°</Td>
+                        <Td>{temp} °{isCelsius ? 'C' : 'F'}</Td>
                     </TrBottom>
                 </tfoot>
             </Table>
