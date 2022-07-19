@@ -6,16 +6,28 @@ import ArrowBack from '../../assets/ArrowBack.svg'
 import { selectWeather } from '../redux/slices/weather/slice';
 
 const Wrapper = styled.div`
-    display: flex;
-    justify-content: space-around;
     margin-top: 85px;
     margin-bottom: 124px;
+
+    @media (max-width: 1350px) {
+        width: calc(100vw - 236px);
+        margin: 85px auto;
+        margin-bottom: 124px;
+        overflow: scroll
+    }
 `;
 
-const Table = styled('table')`
+const Table = styled.table`
+    width: 1300px;
     margin: 0 auto;
     border-collapse: collapse;
 `;
+
+const Button = styled.button`
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+`
 
 const TrTop = styled.tr`
     font-size: 24px;
@@ -49,29 +61,32 @@ type TableDailyDataProps = {
 
 const TableDailyData: React.FC<TableDailyDataProps> = ({ day, description, humidity, windSpeed, temp }) => {
     const { isCelsius } = useSelector(selectWeather)
+
     return (
-        <Wrapper>
-            <Table>
-                <tbody>
-                    <TrTop>
-                        <Th style={{ paddingRight: '282px' }}>DAY</Th>
-                        <Th style={{ paddingRight: '125px' }}>DESCRIPTION</Th>
-                        <Th style={{ paddingRight: '120px' }}>HUMIDITY</Th>
-                        <Th style={{ paddingRight: '96px' }}>WIND</Th>
-                        <Th>TEMPERATURE</Th>
-                    </TrTop>
-                </tbody>
-                <tfoot>
-                    <TrBottom>
-                        <Td style={{ paddingRight: '282px', paddingLeft: '9px' }}>{day}</Td>
-                        <Td style={{ paddingRight: '125px' }}>{description}</Td>
-                        <Td style={{ paddingRight: '120px' }}>{humidity}%</Td>
-                        <Td style={{ paddingRight: '96px' }}>{windSpeed} mph</Td>
-                        <Td>{temp} °{isCelsius ? 'C' : 'F'}</Td>
-                    </TrBottom>
-                </tfoot>
-            </Table>
-        </Wrapper>
+        <>
+            <Wrapper>
+                <Table>
+                    <tbody>
+                        <TrTop>
+                            <Th style={{ paddingRight: '282px' }}>DAY</Th>
+                            <Th style={{ paddingRight: '125px' }}>DESCRIPTION</Th>
+                            <Th style={{ paddingRight: '120px' }}>HUMIDITY</Th>
+                            <Th style={{ paddingRight: '96px' }}>WIND</Th>
+                            <Th>TEMPERATURE</Th>
+                        </TrTop>
+                    </tbody>
+                    <tfoot>
+                        <TrBottom>
+                            <Td style={{ paddingRight: '282px', paddingLeft: '9px' }}>{day}</Td>
+                            <Td style={{ paddingRight: '125px' }}>{description}</Td>
+                            <Td style={{ paddingRight: '120px' }}>{humidity}%</Td>
+                            <Td style={{ paddingRight: '96px' }}>{windSpeed} mph</Td>
+                            <Td>{temp} °{isCelsius ? 'C' : 'F'}</Td>
+                        </TrBottom>
+                    </tfoot>
+                </Table>
+            </Wrapper>
+        </>
     )
 }
 

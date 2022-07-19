@@ -13,17 +13,27 @@ const Wrapper = styled.div`
 const Time = styled.h1`
     position: absolute;
     color: #fff;
-    top: 22px;
+    top: 15px;
     left: 25px;
+    z-index: 2;
     font-size: 22px;
     font-weight: 600;
     letter-spacing: 2px;
 `;
 
+const TableWrapper = styled.div`
+    margin: auto;
+    padding-top: 54px;
+
+    @media (max-width: 1460px) {
+        width: calc(100vw - 136px);
+        overflow: scroll
+    }
+`
+
 const Table = styled.table`
     width: 1300px;
     margin: auto;
-    padding-top: 54px;
 `
 
 const Tr = styled.tr`
@@ -34,6 +44,7 @@ const Td = styled.td`
     color: #fff;
     font-size: 22px;
     font-weight: 500;
+
     &:not(:last-child) {
         padding-right: 176px; 
     }
@@ -43,10 +54,10 @@ const Th = styled.th`
     color: rgba(255, 255, 255, 0.8);
     font-size: 23px;
     padding-bottom: 15px;
+
     &:not(:last-child) {
-        padding-right: 176px; 
+        padding-right: 176px;
     }
-    
 `
 
 const TableCurrentData: React.FC = () => {
@@ -55,26 +66,28 @@ const TableCurrentData: React.FC = () => {
     return (
         <Wrapper>
             <Time>Now</Time>
-            <Table>
-                <tbody>
-                    <Tr>
-                        <Th>Description</Th>
-                        <Th>Humidity</Th>
-                        <Th>Wind Speed</Th>
-                        <Th>Visibility</Th>
-                        <Th>Pressure</Th>
-                    </Tr>
-                </tbody>
-                <tfoot>
-                    <Tr>
-                        <Td>{currentWeather.description}</Td>
-                        <Td>{currentWeather.humidity}%</Td>
-                        <Td>{currentWeather.windSpeed} mph</Td>
-                        <Td>{currentWeather.visibility} km</Td>
-                        <Td>{currentWeather.pressure} hPa</Td>
-                    </Tr>
-                </tfoot>
-            </Table>
+            <TableWrapper>
+                <Table>
+                    <tbody>
+                        <Tr>
+                            <Th>Description</Th>
+                            <Th>Humidity</Th>
+                            <Th>Wind Speed</Th>
+                            <Th>Visibility</Th>
+                            <Th>Pressure</Th>
+                        </Tr>
+                    </tbody>
+                    <tfoot>
+                        <Tr>
+                            <Td>{currentWeather.description}</Td>
+                            <Td>{currentWeather.humidity}%</Td>
+                            <Td>{currentWeather.windSpeed} mph</Td>
+                            <Td>{currentWeather.visibility} km</Td>
+                            <Td>{currentWeather.pressure} hPa</Td>
+                        </Tr>
+                    </tfoot>
+                </Table>
+            </TableWrapper>
         </Wrapper>
     )
 }

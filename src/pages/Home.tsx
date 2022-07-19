@@ -28,31 +28,51 @@ const ContentTop = styled.div`
 
     @media (max-width: 1205px) {
         flex-direction: column;
-        width: 800px;
+        gap: 40px;
+        width: calc(100vw - 105px);
         margin: 0 auto;
         margin-bottom: 116px;
-        width: 1100px;
     }
 `;
 
 const ContentTopForecast = styled.div`
     display: flex;
-    align-items: center;    
+    align-items: center;
     margin: 0 auto;
     
     &:not(:last-child) {
         margin-right: 160px;
+        
     }; 
 
-    /* @media (max-width: 1205px) {
-        overflow: auto;
-    } */
+    @media (max-width: 1205px) {
+        width: calc(100vw - 180px);
+        overflow: scroll;
+    }
+
+    @media (max-width: 700px) {
+        width: calc(100vw - 60px);
+        overflow: scroll;
+    }
 `
 
 const ForecastSkeletonStyle = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
     &:not(:last-child) {
-        margin-right: 160px;
+    margin-right: 160px;
+
+    @media(max-width: 1400px) {
+        margin-right: 120px;
     }
+
+    @media(max-width: 1205px) {
+        margin-right: 100px;
+    }
+}
 `;
 
 const ContentFiveDays = styled.div`
@@ -60,6 +80,10 @@ const ContentFiveDays = styled.div`
     border: 2px solid #000;
     border-radius: 50px;
     margin: 100px auto;
+
+    @media (max-width: 1350px) {
+        width: calc(100vw - 50px);
+    }
 `;
 
 const TableSkeletonWrapper = styled.div`

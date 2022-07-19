@@ -3,7 +3,6 @@ import ContentLoader from "react-content-loader"
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-    position: relative;
     width: 100%; 
     height: 178px;
     background-color: #343A40;

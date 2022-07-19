@@ -15,12 +15,27 @@ const StyledHeader = styled.header`
     @media (max-width: 1205px) {
         margin-bottom: 50px;
     }
+
+    @media (max-width: 990px) {
+        height: 160px;
+    }   
+
+    @media (max-width: 680px) {
+        height: 220px;
+    }
 `;
 
 const Container = styled.div`
     display: flex;
     margin-left: 105px;
     width: calc(100vw - 229px);
+
+    @media (max-width: 990px) {
+        flex-direction: column;
+        align-items: center;
+        margin: 0 auto;
+        width: 100vw;
+    }
 `;
 
 const HeaderLeft = styled.div`
@@ -31,7 +46,29 @@ const HeaderLeft = styled.div`
     font-size: 20px;
     margin-right: 130px;
     margin-top: 31px;
+
+    @media (max-width: 990px) {
+        width: 109px;
+        margin: 20px auto;
+        margin-bottom: 0;
+    }
 `;
+
+const HeaderRight = styled.div`
+    display: flex;
+    justify-content: space-around;
+    width: calc(100vw - 429px);
+
+    @media (max-width: 990px) {
+        width: 100vw;
+        justify-content: space-around;
+    }
+
+    @media (max-width: 680px) {
+        flex-direction: column;
+        align-items: center;
+    }
+`
 
 const BtnToggle = styled.button`
     width: 170px;
@@ -69,10 +106,12 @@ const Header: React.FC = () => {
                     <img width={35} height={19} src={logo} alt='sun' />
                     WeatherApp
                 </HeaderLeft>
-                <Search />
-                <BtnToggle onClick={() => dispatch(setIsCelsius())}>
-                    <BtnCelsius isCelsius={isCelsius}>°C</BtnCelsius> / <BtnF isCelsius={isCelsius}>°F</BtnF>
-                </BtnToggle>
+                <HeaderRight>
+                    <Search />
+                    <BtnToggle onClick={() => dispatch(setIsCelsius())}>
+                        <BtnCelsius isCelsius={isCelsius}>°C</BtnCelsius> / <BtnF isCelsius={isCelsius}>°F</BtnF>
+                    </BtnToggle>
+                </HeaderRight>
             </Container>
         </StyledHeader>
     );

@@ -16,6 +16,20 @@ const Wrapper = styled.div`
         width: calc(100vw - 600px);
         margin-right: 100px;
     }
+
+    @media (max-width: 990px) {
+        width: calc(100vw - 410px);
+        margin-right: 0;
+    }
+
+    @media (max-width: 680px) {
+        width: calc(100vw - 150px);
+        margin-right: 0;
+    }
+
+    @media (max-width: 430px) {
+        width: calc(100vw - 50px)
+    }
 `;
 
 const Svg = styled.svg`
@@ -29,11 +43,6 @@ const Svg = styled.svg`
     &:hover {
         opacity: 0.5;
     }
-
-    @media (max-width: 980px) {
-        display: none;
-        margin: 0;
-    }
 `;
 
 const InputWrapper = styled.div`
@@ -46,6 +55,18 @@ const InputWrapper = styled.div`
     @media (max-width: 1240px) {
         width: calc(100vw - 740px);
     }
+
+    @media (max-width: 990px) {
+        width: calc(100vw - 440px) 
+    }
+
+    @media (max-width: 680px) {
+        width: calc(100vw - 250px) 
+    }
+
+    @media (max-width: 430px) {
+        width: calc(100vw - 100px)
+    }
 `;
 
 const Input = styled.input`
@@ -56,17 +77,33 @@ const Input = styled.input`
         margin-left: 20px;
         font-size: 19px;
 
-        &::placeholder {
+        &::placeholder {    
             color: #6a6a6a;
+
+            @media (max-width: 330px) {
+                color: #fff;
+            }
         }
 
         @media (max-width: 1240px) {
-            width: calc(100vw - 850px)
+            width: calc(100vw - 820px)
         }
 
-        @media (max-width: 980px) {
+        /* @media (max-width: 980px) {
         display: none;
         margin: 0;
+    }    */
+
+    @media (max-width: 990px) {
+        width: calc(100vw - 548px) 
+    }
+
+    @media (max-width: 680px) {
+        width: calc(100vw - 300px) 
+    }
+
+    @media (max-width: 430px) {
+        width: calc(100vw - 200px)
     }
 `;
 
