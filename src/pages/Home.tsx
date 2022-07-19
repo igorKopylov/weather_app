@@ -13,14 +13,14 @@ import NetworkError from '../components/Errors/NetworkError';
 
 import { useAppDispatch } from '../redux/store';
 import { useSelector } from 'react-redux';
-import { fetchDaily, fetchForecastHourly, fetchWeather, selectWeather } from '../redux/slices/weather/slice';
+import { fetchDaily, fetchHourly, fetchCurrentWeather, selectWeather } from '../redux/slices/weather/slice';
 import { selectSearch } from '../redux/slices/search/slice';
 
 import ForecastSkeleton from '../components/Forecast/Skeleton';
 import CurrentSkeleton from '../components/Current/Skeleton'
 import { DateTime } from 'luxon';
 import { ThreeDots } from 'react-loader-spinner';
-import { ForecastHourlyObj } from '../redux/slices/weather/types';
+import { HourlyObj } from '../redux/slices/weather/types';
 
 const ContentTop = styled.div`
     display: flex;
@@ -45,14 +45,19 @@ const ContentTopForecast = styled.div`
         
     }; 
 
-    @media (max-width: 1205px) {
+    @media (max-width: 1205px) and (min-width: 700px) {
         width: calc(100vw - 180px);
         overflow: scroll;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 700px) and (min-width: 400px) {
         width: calc(100vw - 60px);
         overflow: scroll;
+    }
+
+    @media (max-width: 400px) {
+        flex-direction: column;
+        gap: 70px;
     }
 `
 
@@ -71,6 +76,10 @@ const ForecastSkeletonStyle = styled.div`
 
     @media(max-width: 1205px) {
         margin-right: 100px;
+    }
+
+    @media (max-width: 400px) {
+        margin-right: 0;
     }
 }
 `;
@@ -123,7 +132,7 @@ const Home: React.FC = () => {
     const { searchValue } = useSelector(selectSearch);
 
     useEffect(() => {
-        dispatch(fetchWeather({
+        dispatch(fetchCurrentWeather({
             city: searchValue,
             isCelsius,
             zone: forecastHourly.timezone
@@ -131,7 +140,7 @@ const Home: React.FC = () => {
     }, [searchValue, isCelsius, forecastHourly.timezone]);
 
     useEffect(() => {
-        dispatch(fetchForecastHourly({
+        dispatch(fetchHourly({
             lon: currentWeather.lon,
             lat: currentWeather.lat,
             isCelsius
@@ -155,20 +164,15 @@ const Home: React.FC = () => {
                             <Current />
                             <ContentTopForecast>
                                 {
-                                    forecastHourly.hourly.map((obj: ForecastHourlyObj, i: number) => {
+                                    forecastHourly.hourly.map((obj: HourlyObj, i: number) => {
                                         const time = DateTime.fromSeconds(obj.dt).setZone(forecastHourly.timezone).toFormat('h')
                                         const halfDay = DateTime.fromSeconds(obj.dt).setZone(forecastHourly.timezone).toFormat('a')
                                         const formattedHalfDay = halfDay.includes('PM') ? 'pm' : 'am'
-                                        const iconUrl = `https://openweathermap.org/img/wn/${obj.weather[0].icon}@2x.png`
-                                        return <Forecast key={i} time={time} halfDay={formattedHalfDay} iconUrl={iconUrl} temp={Math.round(obj.temp)} />
+                                        const iconName = obj.weather[0].icon
+                                        return <Forecast key={i} time={time} halfDay={formattedHalfDay} iconName={iconName} temp={Math.round(obj.temp)} />
                                     })
                                 }
                             </ContentTopForecast>
-
-                            {/* {
-                    status === 'loading' && [...new Array(4)].map((_, i) => <ForecastSkeletonStyle key={i}><ForecastSkeleton /></ForecastSkeletonStyle>)
-                } */}
-
                         </ContentTop>
                         <TableCurrentData />
                         {

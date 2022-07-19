@@ -1,13 +1,12 @@
-import { NumberingSystem } from 'luxon';
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import styled, { keyframes } from 'styled-components';
-import ArrowBack from '../../assets/ArrowBack.svg'
+import styled from 'styled-components';
 import { selectWeather } from '../redux/slices/weather/slice';
 
 const Wrapper = styled.div`
     margin-top: 85px;
     margin-bottom: 124px;
+    width: 1300px;
 
     @media (max-width: 1350px) {
         width: calc(100vw - 236px);
@@ -15,19 +14,19 @@ const Wrapper = styled.div`
         margin-bottom: 124px;
         overflow: scroll
     }
+
+    @media (max-width: 440px) {
+        width: calc(100vw - 96px);
+        margin: 85px auto;
+        margin-bottom: 124px;
+        overflow: scroll
+    }
 `;
 
 const Table = styled.table`
-    width: 1300px;
     margin: 0 auto;
     border-collapse: collapse;
 `;
-
-const Button = styled.button`
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-`
 
 const TrTop = styled.tr`
     font-size: 24px;

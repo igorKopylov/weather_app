@@ -3,10 +3,10 @@ import { _ActionCreatorWithPreparedPayload } from "@reduxjs/toolkit/dist/createA
 import axios from "axios";
 import { DateTime } from "luxon";
 import { RootState } from "../../store";
-import weatherSliceState, { CurrentWeatherType, FetchDailyOptions, fetchForecastHourlyOptions, fetchWeatherOptions, ForecastDaily, ForecastHourly } from "./types";
+import weatherSliceState, { CurrentWeatherType, FetchDailyOptions, fetchHourlyOptions, fetchWeatherOptions, ForecastDaily, ForecastHourly } from "./types";
 
-export const fetchWeather = createAsyncThunk<CurrentWeatherType, fetchWeatherOptions, { rejectValue: string | null }>(
-    'weather/fetchweahterStatus',
+export const fetchCurrentWeather = createAsyncThunk<CurrentWeatherType, fetchWeatherOptions, { rejectValue: string | null }>(
+    'weather/fetchCurrentWeatherStatus',
     async (options, thunkApi) => {
         const { city, isCelsius, zone } = options
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${city ? city : 'London'}&appid=c4896daa6305d6a7957041f7de285a7a&units=${isCelsius ? 'metric' : 'imperial'}`
@@ -32,9 +32,9 @@ export const fetchWeather = createAsyncThunk<CurrentWeatherType, fetchWeatherOpt
     }
 )
 
-export const fetchForecastHourly = createAsyncThunk(
-    'weather/fetchForecastHourlyStatus',
-    async (options: fetchForecastHourlyOptions) => {
+export const fetchHourly = createAsyncThunk(
+    'weather/fetchHourlyStatus',
+    async (options: fetchHourlyOptions) => {
         const { lat, lon, isCelsius } = options
         const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=c4896daa6305d6a7957041f7de285a7a&units=${isCelsius ? 'metric' : 'imperial'}`
         const { data } = await axios.get(url);
@@ -85,14 +85,14 @@ const weatherSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchWeather.fulfilled, (state, action) => {
+        builder.addCase(fetchCurrentWeather.fulfilled, (state, action) => {
             state.currentWeather = action.payload
             state.status = 'fulfilled'
         })
-        builder.addCase(fetchWeather.pending, (state) => {
+        builder.addCase(fetchCurrentWeather.pending, (state) => {
             state.status = 'loading'
         })
-        builder.addCase(fetchForecastHourly.fulfilled, (state, action) => {
+        builder.addCase(fetchHourly.fulfilled, (state, action) => {
             state.forecastHourly = action.payload
         })
         builder.addCase(fetchDaily.fulfilled, (state, action) => {

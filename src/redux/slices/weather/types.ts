@@ -11,7 +11,7 @@ export type CurrentWeatherType = {
     pressure: number;
 };
 
-export type ForecastHourlyObj = {
+export type HourlyObj = {
     weather: { icon: string }[]
     dt: number;
     temp: number;
@@ -27,10 +27,10 @@ export type ForecastDaily = {
 
 export type ForecastHourly = {
     timezone: string;
-    hourly: ForecastHourlyObj[]
+    hourly: HourlyObj[]
 };
 
-export type fetchForecastHourlyOptions = {
+export type fetchHourlyOptions = {
     lat: number;
     lon: number;
     isCelsius: boolean
