@@ -15,6 +15,10 @@ const Global = createGlobalStyle`
     border: none;
     outline: none;
   }
+
+  a {
+    text-decoration: none;
+  }
 `
 
 const root = ReactDOM.createRoot(
