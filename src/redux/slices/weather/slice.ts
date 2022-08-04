@@ -5,6 +5,8 @@ import { DateTime } from "luxon";
 import { RootState } from "../../store";
 import weatherSliceState, { CurrentWeatherType, FetchDailyOptions, fetchHourlyOptions, fetchWeatherOptions, ForecastDaily, ForecastHourly } from "./types";
 
+
+
 export const fetchCurrentWeather = createAsyncThunk<CurrentWeatherType, fetchWeatherOptions, { rejectValue: string | null }>(
     'weather/fetchCurrentWeatherStatus',
     async (options, thunkApi) => {
@@ -33,7 +35,7 @@ export const fetchCurrentWeather = createAsyncThunk<CurrentWeatherType, fetchWea
 )
 
 export const fetchHourly = createAsyncThunk(
-    'weather/fetchHourlyStatus',
+    'weather/fetchHourlyStatusssssssss',
     async (options: fetchHourlyOptions) => {
         const { lat, lon, isCelsius } = options
         const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=c4896daa6305d6a7957041f7de285a7a&units=${isCelsius ? 'metric' : 'imperial'}`

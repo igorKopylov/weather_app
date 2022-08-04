@@ -1,5 +1,6 @@
 import Reacr from 'react';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../assets/logo.svg';
 import { selectWeather, setIsCelsius } from '../redux/slices/weather/slice';
@@ -97,6 +98,7 @@ const BtnF = styled('span') <{ isCelsius: boolean }>`
 
 const Header: React.FC = () => {
     const { isCelsius } = useSelector(selectWeather);
+    const location = useLocation()
     const dispatch = useAppDispatch()
 
     return (
@@ -107,10 +109,16 @@ const Header: React.FC = () => {
                     WeatherApp
                 </HeaderLeft>
                 <HeaderRight>
-                    <Search />
-                    <BtnToggle onClick={() => dispatch(setIsCelsius())}>
-                        <BtnCelsius isCelsius={isCelsius}>°C</BtnCelsius> / <BtnF isCelsius={isCelsius}>°F</BtnF>
-                    </BtnToggle>
+                    {
+                        location.pathname === '/' && (
+                            <>
+                                <Search />
+                                <BtnToggle onClick={() => dispatch(setIsCelsius())}>
+                                    <BtnCelsius isCelsius={isCelsius}>°C</BtnCelsius> / <BtnF isCelsius={isCelsius}>°F</BtnF>
+                                </BtnToggle>
+                            </>
+                        )
+                    }
                 </HeaderRight>
             </Container>
         </StyledHeader>
