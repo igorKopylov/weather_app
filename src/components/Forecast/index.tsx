@@ -1,6 +1,4 @@
-import axios from 'axios';
-import { DateTime } from 'luxon';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { selectWeather } from '../../redux/slices/weather/slice';

@@ -1,7 +1,6 @@
-import React, { lazy, Suspense, useEffect } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { selectSearch } from '../../redux/slices/search/slice';
 import { selectWeather } from '../../redux/slices/weather/slice';
 import { useAppDispatch } from '../../redux/store';
 
